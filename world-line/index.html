@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/header.css" />
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	
+      	//mui.plusReady:设备准备就绪
+      	mui.plusReady(function(){
+      		//plus:设备
+      		plus.navigator.setStatusBarStyle("light"); //设置状态栏字体颜色
+      		plus.navigator.setStatusBarBackground("#C9394A"); //设置状态栏背景色
+      	});
+      	
+      	
+    </script>
+</head>
+<body>
+	
+	<header class="mui-bar mui-bar-nav title">
+	    <h1 class="mui-title title-color">onLine</h1>
+	</header>
+	
+	
+	<nav class="mui-bar mui-bar-tab">
+	    <a class="mui-tab-item mui-active">
+	        <span class="mui-icon mui-icon-weixin" tab-index="0"></span>
+	        <span class="mui-tab-label">消息</span>
+	    </a>
+	    <a class="mui-tab-item">
+	        <span class="mui-icon mui-icon-phone" tab-index="1"></span>
+	        <span class="mui-tab-label">联系人</span>
+	    </a>
+	    <a class="mui-tab-item">
+	        <span class="mui-icon mui-icon-paperplane" tab-index="2"></span>
+	        <span class="mui-tab-label">发现</span>
+	    </a>
+	    <a class="mui-tab-item">
+	        <span class="mui-icon mui-icon-person" tab-index="3"></span>
+	        <span class="mui-tab-label">我</span>
+	    </a>
+	</nav>
+	
+	<script type="text/javascript">
+		//	页面数组
+		var chatPageArray = [
+			{
+				pageId: "index-chatList.html",
+				pageUrl: "index-chatList.html"
+			},
+			{
+				pageId: "index-contact.html",
+				pageUrl: "index-contact.html"
+			},
+			{
+				pageId: "index-discover.html",
+				pageUrl: "index-discover.html"
+			},
+			{
+				pageId: "index-me.html",
+				pageUrl: "index-me.html"
+			}
+		];
+		
+		//	设备就绪后,将页面加载到设备上
+		mui.plusReady(function(){
+			//	获取当前的webView对象
+			var indexWebView = plus.webview.currentWebview();
+			//	tab页的样式
+			var tabPageStyle = {
+				top: "44px",
+				bottom: "50px",
+			};
+			
+			//	向当前的主页webview追加子页的4张webview
+			for (var i=0;i<chatPageArray.length;i++){
+				//	创建一个webview;
+				//	plus.webview.create:传入参数后,会创建一个webview并且返回一个WebViewObject对象
+				var pageObject = plus.webview.create(chatPageArray[i].pageUrl,chatPageArray[i].pageId,tabPageStyle);
+				pageObject.hide(); //页面创建出来后,隐藏掉
+				
+				//	追加每一个子页面到主页面
+				indexWebView.append(pageObject);
+			}
+			
+			//	页面加载完成后主页默认展示第一个子页面
+			plus.webview.show(chatPageArray[0].pageId);
+		});
+		
+		
+		//	点击tab选项卡,切换界面
+		mui('.mui-bar-tab').on('tap','a',function(){
+			//	获得当前选项卡上的index
+			var tabIndex = this.getAttribute("tab-index");
+			
+			//	显示页面
+			plus.webview.show(chatPageArray[tabIndex].pageId,"fade-in",200);
+			
+			//	影藏其他页面
+			for( var i=0;i<chatPageArray.length;i++){
+				if(tabIndex != i){
+					plus.webview.hide(chatPageArray[i].pageId);
+				}
+			}
+		});
+		
+	</script>
+</body>
+</html>
